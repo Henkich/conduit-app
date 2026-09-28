@@ -15,6 +15,32 @@ This codebase was created to demonstrate a fully fledged fullstack application b
 
 ---
 
+## Run with Docker
+
+Requires Docker with Compose v2. Starts PostgreSQL, the API and the frontend (nginx).
+
+```bash
+cp .env.example .env          # then set POSTGRES_PASSWORD and JWT_KEY
+docker compose up -d --build --wait
+```
+
+| Service  | URL                             | Notes                                   |
+| -------- | ------------------------------- | --------------------------------------- |
+| frontend | http://localhost:3000/          | nginx; `/api/*` is proxied to backend   |
+| backend  | http://localhost:3001/api       | e.g. `GET /api/tags`                    |
+| db       | not published to the host       | data kept in the `pgdata` volume        |
+
+Host ports can be changed with `FRONTEND_PORT` / `BACKEND_PORT` in `.env`.
+Tables are created by the backend on startup (`sequelize.sync`); the database starts empty.
+
+```bash
+docker compose logs -f backend   # follow API logs
+docker compose down              # stop, keep data
+docker compose down -v           # stop and delete the database volume
+```
+
+---
+
 ## Getting Started
 
 These instructions will help you install and run the project on your local machine for development and testing.
